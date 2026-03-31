@@ -1,0 +1,48 @@
+@page "/TwistyMaze"
+@using labyrinth
+@using MermaidJS.Blazor
+
+<PageTitle>Basic Maze Visualizer</PageTitle>
+
+<h1>Enter your name</h1>
+<input @bind="userName" />
+<button @onclick="generateMaze">Generate Basic Maze</button>
+<h1>Check Solution</h1>
+<input @bind="solution" />
+<button @onclick="CheckPath">Check Solution</button>
+@if(isPathCorrect){
+    <h3>Congrats you made it out!</h3>
+}
+else{
+    <h3>Not the right path</h3>
+}
+<MermaidDiagram Definition=@mazeBody />
+@foreach(NodeLink link in links){
+    <p>@link</p>
+}
+
+@code
+{
+    string userName;
+    IEnumerable<NodeLink> links = [];
+    string mazeBody;
+    string solution;
+    MazeCell start;
+    bool isPathCorrect;
+
+    void generateMaze()
+    {
+        start = MazeUtilities.twistyMazeFor(userName);
+        links = MazeExplorer.ExploreMaze(start);
+        mazeBody = "graph TD\n";
+        mazeBody += string.Join("\n", links.Select( l => l.Label));  
+    }
+
+    void CheckPath()
+    {
+        if(start is null || solution is null){
+            return;
+        }
+        isPathCorrect = MazeUtilities.isPathToFreedom(start, solution);
+    }
+}

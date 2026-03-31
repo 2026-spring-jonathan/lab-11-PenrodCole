@@ -1,0 +1,45 @@
+using labyrinth;
+
+public static class MazeExplorer
+{
+    public static IEnumerable<NodeLink> ExploreMaze(MazeCell start)
+    {
+        List<NodeLink> visited = new List<NodeLink>();
+        ExploreNode(start, visited);
+        return visited;
+    }
+    public static void ExploreNode(MazeCell current, List<NodeLink> links)
+    {
+        if(current is null){
+            return;
+        }
+        if(current.North is not null){
+             NodeLink? northLink = new NodeLink(current, "North", current.North);
+            if(!links.Contains(northLink)){
+                links.Add(northLink);
+                ExploreNode(current.North, links);
+            }
+        }
+        if(current.East is not null){
+            NodeLink? eastLink = new NodeLink(current, "East", current.East);
+            if(!links.Contains(eastLink)){
+                links.Add(eastLink);
+                ExploreNode(current.East, links);
+            }
+        }
+        if(current.South is not null){
+            NodeLink? southLink = new NodeLink(current, "South", current.South);
+            if(!links.Contains(southLink)){
+                links.Add(southLink);
+                ExploreNode(current.South, links);
+            }
+        }
+        if(current.West is not null){
+            NodeLink? westLink = new NodeLink(current, "West", current.West);
+            if(!links.Contains(westLink)){
+                links.Add(westLink);
+                ExploreNode(current.West, links);
+            }
+        }
+    }
+}
